@@ -131,11 +131,13 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
         A function that takes a list, applies `fn` to each element, and returns a
          new list
     """
+
     def apply(ls: Iterable[float]):
         new_ls = []
         for each in ls:
             new_ls += [fn(each)]
         return new_ls
+
     return apply
 
 
@@ -145,7 +147,7 @@ def negList(ls: Iterable[float]) -> Iterable[float]:
 
 
 def zipWith(
-    fn: Callable[[float, float], float]
+    fn: Callable[[float, float], float],
 ) -> Callable[[Iterable[float], Iterable[float]], Iterable[float]]:
     """
     Higher-order zipwith (or map2).
@@ -160,11 +162,14 @@ def zipWith(
          applying fn(x, y) on each pair of elements.
 
     """
-    def apply(l1: Iterable[float], l2: Iterable[float]):
+
+    def apply(ls1: Iterable[float], ls2: Iterable[float]):
         new_ls = []
-        for i in range(len(l1)):
-            new_ls += [fn(l1[i], l2[i])]
+        for i in range(len(ls1)):
+            x, y = ls1[i], ls2[i]
+            new_ls.append(fn(x, y))
         return new_ls
+
     return apply
 
 
@@ -188,11 +193,13 @@ def reduce(
          $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
          fn(x_1, x_0)))`
     """
+
     def apply(ls: Iterable[float]):
         acc = start
         for each in ls:
             acc = fn(acc, each)
         return acc
+
     return apply
 
 

@@ -32,27 +32,34 @@ class Module:
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
         # TODO: Implement for Task 0.4.
+        #   - [ ] recur into all child modules and set <training> to True.
         raise NotImplementedError("Need to implement for Task 0.4")
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
         # TODO: Implement for Task 0.4.
+        #   - [ ] recur into all child modules and set <training> to False.
         raise NotImplementedError("Need to implement for Task 0.4")
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
-        Collect all the parameters of this module and its descendents.
+        Collect *all the parameters* of this module and *its descendents*.
 
 
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
         # TODO: Implement for Task 0.4.
+        #   - [ ] build a topological map from the list of modules by calling self.modules()
+        #   - [ ] recur into each child module and find all descendants.
+        #   - [ ] map each leaf as a tuple.
         raise NotImplementedError("Need to implement for Task 0.4")
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
         # TODO: Implement for Task 0.4.
+        #   - [ ] build a topological map from the list of modules by calling self.modules()
+        #   - [ ] recur into each child module and find all descendants.
         raise NotImplementedError("Need to implement for Task 0.4")
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
