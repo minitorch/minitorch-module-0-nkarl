@@ -29,17 +29,25 @@ class Module:
         m: Dict[str, Module] = self.__dict__["_modules"]
         return list(m.values())
 
+    def _bfs(self, training_state: bool) -> None:
+        remaining = self.modules()
+        self.training = training_state
+        while len(remaining) > 0:
+            node = remaining.pop(0)
+            for each in node.modules():
+                if not each.training:
+                    each.training = training_state
+                    remaining += [each]
+
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
-        # TODO: Implement for Task 0.4.
-        #   - [ ] recur into all child modules and set <training> to True.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self._bfs(True)
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
-        # TODO: Implement for Task 0.4.
-        #   - [ ] recur into all child modules and set <training> to False.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        self._bfs(False)
+        # raise NotImplementedError("Need to implement for Task 0.4")
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
