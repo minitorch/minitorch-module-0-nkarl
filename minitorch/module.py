@@ -29,25 +29,18 @@ class Module:
         m: Dict[str, Module] = self.__dict__["_modules"]
         return list(m.values())
 
-    def _bfs(self, training_state: bool) -> None:
-        remaining = self.modules()
-        self.training = training_state
-        while len(remaining) > 0:
-            node = remaining.pop(0)
-            for each in node.modules():
-                if not each.training:
-                    each.training = training_state
-                    remaining += [each]
+    def _propagate(self, module: Module, training: bool) -> bool:
+        module.training = training
+        for each in module.modules():
+            self._propagate(each, training)
 
     def train(self) -> None:
         "Set the mode of this module and all descendent modules to `train`."
-        self._bfs(True)
-        # raise NotImplementedError("Need to implement for Task 0.4")
+        self._propagate(self, True)
 
     def eval(self) -> None:
         "Set the mode of this module and all descendent modules to `eval`."
-        self._bfs(False)
-        # raise NotImplementedError("Need to implement for Task 0.4")
+        self._propagate(self, False)
 
     def named_parameters(self) -> Sequence[Tuple[str, Parameter]]:
         """
@@ -57,18 +50,18 @@ class Module:
         Returns:
             The name and `Parameter` of each ancestor parameter.
         """
-        # TODO: Implement for Task 0.4.
-        #   - [ ] build a topological map from the list of modules by calling self.modules()
-        #   - [ ] recur into each child module and find all descendants.
-        #   - [ ] map each leaf as a tuple.
-        raise NotImplementedError("Need to implement for Task 0.4")
+
+        def _named_parameters(module, prefix=""):
+            for name, param in module._parameters.items():
+                yield prefix + name, param
+            for name, module in module._modules.items():
+                yield from _named_parameters(module, prefix + name + ".")
+
+        return list(_named_parameters(self))
 
     def parameters(self) -> Sequence[Parameter]:
         "Enumerate over all the parameters of this module and its descendents."
-        # TODO: Implement for Task 0.4.
-        #   - [ ] build a topological map from the list of modules by calling self.modules()
-        #   - [ ] recur into each child module and find all descendants.
-        raise NotImplementedError("Need to implement for Task 0.4")
+        return [param for _, param in self.named_parameters()]
 
     def add_parameter(self, k: str, v: Any) -> Parameter:
         """
@@ -103,6 +96,9 @@ class Module:
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         return self.forward(*args, **kwargs)
+
+    def forward(self):
+        assert False, "Not Implemented"
 
     def __repr__(self) -> str:
         def _addindent(s_: str, numSpaces: int) -> str:
