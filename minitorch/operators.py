@@ -3,7 +3,7 @@ Collection of the core mathematical operators used throughout the code base.
 """
 
 import math
-from typing import Any, Callable, Iterable, List  # , Sequence
+from typing import Callable, Iterable, List  # , Sequence
 
 # ## Task 0.1
 #
@@ -132,7 +132,7 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
          new list
     """
 
-    def f(ls: Iterable[float]) -> Any:
+    def f(ls: Iterable[float]) -> List[float]:
         def g(ls: Iterable[float], acc: List[float]) -> List[float]:
             if ls == []:
                 return acc
@@ -152,8 +152,7 @@ def negList(ls: Iterable[float]) -> Iterable[float]:
 
 def zipWith(
     fn: Callable[[float, float], float],
-) -> Callable[[Iterable[float]], Any]:
-    # ) -> Callable[[Iterable[float], Iterable[float]], List[float]]:
+) -> Callable[[Iterable[float]], Callable[[Iterable[float]], List[float]]]:
     """
     Higher-order zipwith (or map2).
 
@@ -168,8 +167,10 @@ def zipWith(
 
     """
 
-    def f(ls1: Iterable[float]) -> Any:
-        def g(ls2: Iterable[float]) -> Any:
+    def f(ls1: Iterable[float]) -> Callable[[Iterable[float]], List[float]]:
+        def g(
+            ls2: Iterable[float],
+        ) -> List[float]:
             def h(
                 ls1: Iterable[float], ls2: Iterable[float], acc: List[float]
             ) -> List[float]:
@@ -186,7 +187,7 @@ def zipWith(
     return f
 
 
-def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Any:
+def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> List[float]:
     "Add the elements of `ls1` and `ls2` using `zipWith` and `add`"
     return zipWith(add)(ls1)(ls2)
 
@@ -207,8 +208,8 @@ def reduce(
          fn(x_1, x_0)))`
     """
 
-    def f(ls: Iterable[float]) -> Any:
-        def g(ls: Iterable[float], acc: float) -> Any:
+    def f(ls: Iterable[float]) -> float:
+        def g(ls: Iterable[float], acc: float) -> float:
             if ls == []:
                 return acc
             x, *xs = ls
